@@ -1,0 +1,22 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Django
+*.log
+db.sqlite3
+media/
+
+# Environment variables — NEVER commit this
+.env
+
+# VS Code
+.vscode/
+
+# Database
+*.sql
+*.dump

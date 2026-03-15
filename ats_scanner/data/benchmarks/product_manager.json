@@ -1,0 +1,13 @@
+{
+  "role": "Product Manager",
+  "min_keyword_match_pct": 60,
+  "avg_keyword_match_pct": 74,
+  "typical_skills_count": 12,
+  "critical_skills": ["Roadmap", "Stakeholder", "Agile", "Metrics", "User research"],
+  "section_weights": {
+    "experience": 1.0,
+    "projects": 0.85,
+    "skills": 0.55,
+    "education": 0.5
+  }
+}

@@ -20,3 +20,4 @@ media/
 # Database
 *.sql
 *.dump
+pyrightconfig.json

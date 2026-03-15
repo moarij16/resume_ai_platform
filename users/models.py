@@ -37,7 +37,7 @@ class UserProfile(BaseModel):
         db_table = "user_profiles"
 
     def __str__(self):
-        return self.email or self.cognito_sub
+        return self.email or self.supabase_uid
 
     # ------------------------------------------------------------------
     # DRF required properties

@@ -4,7 +4,8 @@ from .models import UserProfile
 
 class UserProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(read_only=True)
-    is_pro = serializers.BooleanField(read_only=True)
+    is_premium = serializers.BooleanField(read_only=True)
+    is_admin = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = UserProfile
@@ -14,15 +15,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "full_name",
+            "role",
             "plan",
-            "is_pro",
+            "is_premium",
+            "is_admin",
+            "resume_improvements_used",
+            "cover_letters_used",
+            "ats_scans_used",
             "created_at",
             "last_login",
         ]
         read_only_fields = [
             "id",
-            "email",  # managed by Cognito — never updated here
-            "plan",  # managed by billing — never updated here
+            "email",
+            "role",
+            "plan",
+            "resume_improvements_used",
+            "cover_letters_used",
+            "ats_scans_used",
             "created_at",
             "last_login",
         ]
@@ -42,7 +52,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-        # delegate to model — serializer never touches fields directly
         instance.first_name = validated_data.get("first_name", instance.first_name)
         instance.last_name = validated_data.get("last_name", instance.last_name)
         instance.save(update_fields=["first_name", "last_name"])

@@ -1,40 +1,25 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import Resume
 
 
-class ResumeViewSet(viewsets.GenericViewSet):
+class ResumeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
+    http_method_names = ["get", "post", "patch", "delete"]
 
-    def list(self, request):
-        return Response({"message": "list resumes exists"})
+    def get_queryset(self):
+        return Resume.objects.filter(user=self.request.user)
 
-    def create(self, request):
-        return Response({"message": "create resume exists"})
-
-    def retrieve(self, request, pk=None):
-        return Response({"message": f"resume {pk} exists"})
-
-    def partial_update(self, request, pk=None):
-        return Response({"message": f"resume {pk} update exists"})
-
-    def destroy(self, request, pk=None):
-        return Response({"message": f"resume {pk} delete exists"})
-
-    # Custom actions for non-standard endpoints
     @action(detail=False, methods=["post"], url_path="upload")
     def upload(self, request):
-        return Response({"message": "upload exists"})
+        return Response({"message": "upload resume exists"})
 
     @action(detail=False, methods=["post"], url_path="generate")
     def generate(self, request):
-        return Response({"message": "generate exists"})
+        return Response({"message": "resume generate exists"})
 
     @action(detail=True, methods=["get"], url_path="download")
     def download(self, request, pk=None):
         return Response({"message": f"resume {pk} download exists"})
-
-    @action(detail=False, methods=["get"], url_path="templates")
-    def templates(self, request):
-        return Response({"message": "templates exists"})

@@ -24,10 +24,10 @@ INSTALLED_APPS = [
     "users",
     "resumes",
     "ats",
-    "linkedin_gen",
     "core",
     "billing",
     "jobs",
+    "generated_documents",
 ]
 
 MIDDLEWARE = [

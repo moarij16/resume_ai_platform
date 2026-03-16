@@ -3,5 +3,4 @@ from .views import ResumeViewSet
 
 router = DefaultRouter()
 router.register(r"", ResumeViewSet, basename="resumes")
-
 urlpatterns = router.urls

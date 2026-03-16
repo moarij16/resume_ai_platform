@@ -1,35 +1,43 @@
+import uuid
+
 from django.db import models
 from django.utils import timezone
 from core.base import BaseModel
 
 
-class UserProfile(BaseModel):
+class Users(BaseModel):
 
-    PLAN_FREE = "free"
-    PLAN_PRO = "pro"
-    PLAN_ENTERPRISE = "enterprise"
-    PLAN_CHOICES = [
-        (PLAN_FREE, "Free"),
-        (PLAN_PRO, "Pro"),
-        (PLAN_ENTERPRISE, "Enterprise"),
-    ]
-
-    cognito_sub = models.CharField(max_length=128, unique=True, db_index=True)
+    # ROLE_USER = "user"
+    # ROLE_ADMIN = "admin"
+    # ROLE_CHOICES = [
+    #     (ROLE_USER, "User"),
+    #     (ROLE_ADMIN, "Admin"),
+    # ]
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, db_column="user_id"
+    )
+    supabase_uid = models.CharField(max_length=128, unique=True, db_index=True)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100, blank=True)
-    plan = models.CharField(max_length=20, choices=PLAN_CHOICES, default=PLAN_FREE)
+    # role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_USER)
+    # plan = models.CharField(max_length=20, choices=PLAN_CHOICES, default=PLAN_FREE)
     is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(null=True, blank=True)
 
+    # Usage tracking — SRS section 5
+    # resume_improvements_used = models.PositiveIntegerField(default=0)
+    # cover_letters_used = models.PositiveIntegerField(default=0)
+    # ats_scans_used = models.PositiveIntegerField(default=0)
+
     class Meta:
-        db_table = "user_profiles"
+        db_table = "users"
 
     def __str__(self):
-        return self.email or self.cognito_sub
+        return self.email or self.supabase_uid
 
     # ------------------------------------------------------------------
-    # Required by DRF's IsAuthenticated permission check
+    # DRF required properties
     # ------------------------------------------------------------------
 
     @property
@@ -45,22 +53,17 @@ class UserProfile(BaseModel):
     # ------------------------------------------------------------------
 
     @classmethod
-    def get_or_create_from_cognito(
-        cls, cognito_sub, email="", given_name="", family_name=""
+    def get_or_create_from_supabase(
+        cls, supabase_uid, email="", given_name="", family_name=""
     ):
-        """
-        Called on every request by the auth class.
-        Creates user on first login, syncs fields on subsequent logins.
-        """
         user, created = cls.objects.get_or_create(
-            cognito_sub=cognito_sub,
+            supabase_uid=supabase_uid,
             defaults={
                 "email": email,
                 "first_name": given_name,
                 "last_name": family_name,
             },
         )
-
         if not created:
             updated_fields = []
             if email and user.email != email:
@@ -82,20 +85,6 @@ class UserProfile(BaseModel):
         self.last_login = timezone.now()
         self.save(update_fields=["last_login"])
 
-    def upgrade_plan(self, plan):
-        if plan not in dict(self.PLAN_CHOICES):
-            raise ValueError(f"Invalid plan: {plan}")
-        self.plan = plan
-        self.save(update_fields=["plan"])
-
     def deactivate(self):
         self.is_active = False
         self.save(update_fields=["is_active"])
-
-    @property
-    def full_name(self):
-        return f"{self.first_name} {self.last_name}".strip()
-
-    @property
-    def is_pro(self):
-        return self.plan in (self.PLAN_PRO, self.PLAN_ENTERPRISE)

@@ -16,16 +16,18 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
+    "pgvector.django",
     # Third party
     "rest_framework",
     "corsheaders",
     # Project apps
     "users",
     "resumes",
-    "cover_letters",
     "ats",
     "linkedin_gen",
     "core",
+    "billing",
+    "jobs",
 ]
 
 MIDDLEWARE = [

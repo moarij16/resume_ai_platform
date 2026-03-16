@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from .models import UserProfile
+from .models import Users
 
 
 class SupabaseAuthentication(BaseAuthentication):
@@ -61,7 +61,7 @@ class SupabaseAuthentication(BaseAuthentication):
         given_name = user_metadata.get("first_name", "")
         family_name = user_metadata.get("last_name", "")
 
-        user, _ = UserProfile.get_or_create_from_supabase(
+        user, _ = Users.get_or_create_from_supabase(
             supabase_uid=supabase_uid,
             email=email,
             given_name=given_name,

@@ -1,38 +1,24 @@
 from rest_framework import serializers
-from .models import UserProfile
+from .models import Users
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(read_only=True)
-    is_premium = serializers.BooleanField(read_only=True)
-    is_admin = serializers.BooleanField(read_only=True)
+class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = UserProfile
+        model = Users
         fields = [
             "id",
             "email",
             "first_name",
             "last_name",
-            "full_name",
-            "role",
-            "plan",
-            "is_premium",
-            "is_admin",
-            "resume_improvements_used",
-            "cover_letters_used",
-            "ats_scans_used",
+            "is_active",
             "created_at",
             "last_login",
         ]
         read_only_fields = [
             "id",
             "email",
-            "role",
-            "plan",
-            "resume_improvements_used",
-            "cover_letters_used",
-            "ats_scans_used",
+            "is_active",
             "created_at",
             "last_login",
         ]

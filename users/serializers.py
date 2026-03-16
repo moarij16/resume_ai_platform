@@ -1,28 +1,24 @@
 from rest_framework import serializers
-from .models import UserProfile
+from .models import Users
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(read_only=True)
-    is_pro = serializers.BooleanField(read_only=True)
+class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = UserProfile
+        model = Users
         fields = [
             "id",
             "email",
             "first_name",
             "last_name",
-            "full_name",
-            "plan",
-            "is_pro",
+            "is_active",
             "created_at",
             "last_login",
         ]
         read_only_fields = [
             "id",
-            "email",  # managed by Cognito — never updated here
-            "plan",  # managed by billing — never updated here
+            "email",
+            "is_active",
             "created_at",
             "last_login",
         ]
@@ -42,7 +38,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-        # delegate to model — serializer never touches fields directly
         instance.first_name = validated_data.get("first_name", instance.first_name)
         instance.last_name = validated_data.get("last_name", instance.last_name)
         instance.save(update_fields=["first_name", "last_name"])

@@ -16,16 +16,18 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
+    "pgvector.django",
     # Third party
     "rest_framework",
     "corsheaders",
     # Project apps
     "users",
     "resumes",
-    "cover_letters",
     "ats",
-    "linkedin_gen",
     "core",
+    "billing",
+    "jobs",
+    "generated_documents",
 ]
 
 MIDDLEWARE = [
@@ -73,7 +75,7 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "users.authentication.CognitoAuthentication",
+        "users.authentication.SupabaseAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -82,18 +84,23 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
     ],
     "EXCEPTION_HANDLER": "career_assistant.exceptions.custom_exception_handler",
+    "UNAUTHENTICATED_USER": None,
 }
-
 # AWS Cognito
 
-AWS_COGNITO_REGION = os.getenv("AWS_COGNITO_REGION")
-AWS_COGNITO_USER_POOL_ID = os.getenv("AWS_COGNITO_USER_POOL_ID")
-AWS_COGNITO_APP_CLIENT_ID = os.getenv("AWS_COGNITO_APP_CLIENT_ID")
-AWS_COGNITO_JWKS_URL = (
-    f"https://cognito-idp.{AWS_COGNITO_REGION}.amazonaws.com/"
-    f"{AWS_COGNITO_USER_POOL_ID}/.well-known/jwks.json"
-)
+# AWS_COGNITO_REGION = os.getenv("AWS_COGNITO_REGION")
+# AWS_COGNITO_USER_POOL_ID = os.getenv("AWS_COGNITO_USER_POOL_ID")
+# AWS_COGNITO_APP_CLIENT_ID = os.getenv("AWS_COGNITO_APP_CLIENT_ID")
+# AWS_COGNITO_JWKS_URL = (
+#     f"https://cognito-idp.{AWS_COGNITO_REGION}.amazonaws.com/"
+#     f"{AWS_COGNITO_USER_POOL_ID}/.well-known/jwks.json"
+# )
 
+# Supabase Auth
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_JWKS_URL = os.getenv("SUPABASE_JWKS_URL")
+SUPABASE_SECRET_KEY = os.getenv("SUPABASE_SECRET_KEY")
 
 # CORS
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")

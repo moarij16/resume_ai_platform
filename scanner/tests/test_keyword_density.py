@@ -10,9 +10,17 @@ if str(root) not in sys.path:
 
 def test_keyword_density_structure():
     from scanner.scorers.keyword_density import compute_keyword_density
-    text = "Python is great. I use Python every day. Python and Java."
+    # compute_keyword_density counts within detected sections — text must have
+    # recognisable section headers for mentions to be picked up.
+    text = (
+        "WORK EXPERIENCE\n"
+        "Built Python services daily. Used Python and Java. Python everywhere.\n\n"
+        "TECHNICAL SKILLS\n"
+        "Python, Java, SQL"
+    )
     result = compute_keyword_density(text, ["Python", "Java"])
     assert "Python" in result
+    assert "Java" in result
     assert result["Python"]["mention_count"] >= 3
     assert "current_density_pct" in result["Python"]
     assert "safe_locations" in result["Python"]

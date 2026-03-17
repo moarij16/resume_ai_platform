@@ -28,3 +28,34 @@ class JobDescription(BaseModel):
 
     class Meta:
         db_table = "job_descriptions"
+
+    def __str__(self):
+        return f"{self.job_title} @ {self.company_name}"
+
+    @classmethod
+    def create_for_user(
+        cls,
+        user,
+        job_title: str,
+        company_name: str,
+        job_description_text: str,
+    ) -> "JobDescription":
+        instance = cls(
+            user=user,
+            job_title=job_title,
+            company_name=company_name,
+            job_description_text=job_description_text,
+        )
+        instance.save()
+        return instance
+
+    def update_fields_from(self, **kwargs) -> None:
+        allowed = {"job_title", "company_name", "job_description_text"}
+        fields_to_update = []
+        for field, value in kwargs.items():
+            if field in allowed:
+                setattr(self, field, value)
+                fields_to_update.append(field)
+        if fields_to_update:
+            fields_to_update.append("updated_at")
+            self.save(update_fields=fields_to_update)

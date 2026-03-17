@@ -115,7 +115,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 MAX_UPLOAD_SIZE = 5 * 1024 * 1024  # 5MB
 
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+AI_PROVIDER = os.getenv("AI_PROVIDER", "openai")
+AI_MODEL = os.getenv("AI_MODEL", "gpt-4o")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 LANGUAGE_CODE = "en-us"
 

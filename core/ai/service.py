@@ -1,5 +1,5 @@
 from django.conf import settings
-from .base import BaseAIProvider, AIResponse
+from .base_provider import BaseAIProvider, AIResponse
 from typing import Optional
 
 

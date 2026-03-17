@@ -9,7 +9,7 @@ if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
 import pytest
-from ats_scanner.processors.skill_extractor import normalize_skill, extract_skills
+from scanner.processors.skill_extractor import normalize_skill, extract_skills
 
 
 def test_normalize_skill_known():

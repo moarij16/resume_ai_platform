@@ -37,7 +37,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "career_assistant.urls"
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
@@ -53,7 +53,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "career_assistant.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
@@ -83,7 +83,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
-    "EXCEPTION_HANDLER": "career_assistant.exceptions.custom_exception_handler",
+    "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",
     "UNAUTHENTICATED_USER": None,
 }
 # AWS Cognito
@@ -113,6 +113,28 @@ CORS_ALLOW_CREDENTIALS = True
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 MAX_UPLOAD_SIZE = 5 * 1024 * 1024  # 5MB
+
+# Supabase S3 Storage
+SUPABASE_S3_ENDPOINT = os.getenv("SUPABASE_S3_ENDPOINT")
+SUPABASE_S3_ACCESS_KEY_ID = os.getenv("SUPABASE_S3_ACCESS_KEY_ID")
+SUPABASE_S3_SECRET_ACCESS_KEY = os.getenv("SUPABASE_S3_SECRET_ACCESS_KEY")
+SUPABASE_S3_BUCKET_NAME = os.getenv("SUPABASE_S3_BUCKET_NAME", "user-resumes")
+SUPABASE_S3_REGION = os.getenv("SUPABASE_S3_REGION", "ap-south-1")
+
+if SUPABASE_S3_ENDPOINT and SUPABASE_S3_ACCESS_KEY_ID:
+    STORAGES = {
+        "default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"},
+        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    }
+    AWS_S3_ENDPOINT_URL = SUPABASE_S3_ENDPOINT
+    AWS_ACCESS_KEY_ID = SUPABASE_S3_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY = SUPABASE_S3_SECRET_ACCESS_KEY
+    AWS_STORAGE_BUCKET_NAME = SUPABASE_S3_BUCKET_NAME
+    AWS_S3_REGION_NAME = SUPABASE_S3_REGION
+    AWS_DEFAULT_ACL = None
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_QUERYSTRING_AUTH = True  # signed URLs for private bucket
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
 
 
 AI_PROVIDER = os.getenv("AI_PROVIDER", "openai")

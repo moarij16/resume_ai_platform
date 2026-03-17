@@ -1,6 +1,6 @@
 from django.conf import settings
 from anthropic import Anthropic
-from .base import BaseAIProvider, AIResponse
+from .base_provider import BaseAIProvider, AIResponse
 from typing import Optional
 
 

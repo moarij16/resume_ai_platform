@@ -8,7 +8,7 @@ if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
 import pytest
-from ats_scanner.parsers.resume_parser import parse_resume
+from scanner.parsers.resume_parser import parse_resume
 
 
 def test_parse_resume_nonexistent():

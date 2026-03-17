@@ -16,10 +16,10 @@ if __name__ == "__main__":
     if str(_root) not in sys.path:
         sys.path.insert(0, str(_root))
 
-from ats_scanner.parsers import parse_resume
-from ats_scanner.engines import score_resume_vs_jd
-from ats_scanner.models import analyze_resume_quality
-from ats_scanner.utils import setup_logging, format_output, get_logger
+from scanner.parsers import parse_resume
+from scanner.scorers import score_resume_vs_jd
+from scanner.models import analyze_resume_quality
+from scanner.utils import setup_logging, format_output, get_logger
 
 logger = get_logger(__name__)
 

@@ -9,7 +9,7 @@ if str(root) not in sys.path:
 
 
 def test_keyword_density_structure():
-    from ats_scanner.engines.keyword_density import compute_keyword_density
+    from scanner.scorers.keyword_density import compute_keyword_density
     text = "Python is great. I use Python every day. Python and Java."
     result = compute_keyword_density(text, ["Python", "Java"])
     assert "Python" in result
@@ -19,5 +19,5 @@ def test_keyword_density_structure():
 
 
 def test_keyword_density_empty_keywords():
-    from ats_scanner.engines.keyword_density import compute_keyword_density
+    from scanner.scorers.keyword_density import compute_keyword_density
     assert compute_keyword_density("Some text", []) == {}

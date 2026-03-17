@@ -9,13 +9,13 @@ if str(root) not in sys.path:
 
 
 def test_skill_similarity_exact():
-    from ats_scanner.engines.skill_similarity import calculate_skill_similarity
+    from scanner.scorers.skill_similarity import calculate_skill_similarity
     assert calculate_skill_similarity("Python", "Python") == 1.0
     assert calculate_skill_similarity("python", "Python") == 1.0
 
 
 def test_skill_similarity_returns_float():
-    from ats_scanner.engines.skill_similarity import calculate_skill_similarity
+    from scanner.scorers.skill_similarity import calculate_skill_similarity
     s = calculate_skill_similarity("React", "Vue")
     assert isinstance(s, (int, float))
     assert 0 <= s <= 1

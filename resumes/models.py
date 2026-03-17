@@ -28,3 +28,31 @@ class Resume(BaseModel):
 
     def __str__(self):
         return f"{self.name} - {self.user.email}"
+
+    @classmethod
+    def create_from_upload(cls, user, file, name: str) -> "Resume":
+        """
+        Parse an uploaded resume file and persist the record.
+
+        Args:
+            user: Users instance.
+            file: Django UploadedFile from request.FILES.
+            name: Human-readable resume name.
+
+        Returns:
+            Saved Resume instance.
+
+        Raises:
+            ValueError: If the file cannot be parsed.
+        """
+        from resumes.services.resume_service import upload_and_parse
+
+        result = upload_and_parse(user, file)
+        resume = cls(
+            user=user,
+            name=name,
+            resume_data=result["parsed_data"],
+            original_file_url=result["file_url"],
+        )
+        resume.save()
+        return resume

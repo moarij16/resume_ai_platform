@@ -7,7 +7,7 @@ root = Path(__file__).resolve().parent.parent.parent
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
-from ats_scanner.analyzers.content_analyzer import analyze_bullets
+from scanner.analyzers.content_analyzer import analyze_bullets
 
 
 def test_analyze_bullets_structure():

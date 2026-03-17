@@ -9,7 +9,7 @@ if str(root) not in sys.path:
 
 
 def test_experience_relevance_structure():
-    from ats_scanner.engines.experience_relevance import score_experience_relevance
+    from scanner.scorers.experience_relevance import score_experience_relevance
     jobs = [
         {"title": "Software Engineer", "company": "Acme", "start_year": 2020, "end_year": 2023, "duration_years": 3},
     ]
@@ -22,6 +22,6 @@ def test_experience_relevance_structure():
 
 
 def test_experience_relevance_empty_jobs():
-    from ats_scanner.engines.experience_relevance import score_experience_relevance
+    from scanner.scorers.experience_relevance import score_experience_relevance
     out = score_experience_relevance([], "JD text")
     assert out["combined_score"] == 0.0

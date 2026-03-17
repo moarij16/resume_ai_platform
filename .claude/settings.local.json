@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -X POST \"http://localhost:8000/api/v1/resumes/upload/\" -H \"Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6ImJhZTg5MmM1LTQwMTItNDA4Ny1hODRkLTM4YWVlODdjZTIyMyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2ZsZGpqaGJzZGpmc3l2YWJobGZwLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5MjNlNjMyMC0zODg5LTQ4OWQtYWE0NS1hOGJiZTQ1MTYwODkiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzczNzc2MjY4LCJpYXQiOjE3NzM3NzI2NjgsImVtYWlsIjoibW9hcmlqMjhAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzM3NzI2Njh9XSwic2Vzc2lvbl9pZCI6IjA3ZTkwZjVhLWUyYzUtNGI1Ni1hMjhjLWMwMjNhZTc1NzBiYiIsImlzX2Fub255bW91cyI6ZmFsc2V9.FMISnQAiD_0WEuye16ba4tFnXV6qCROS9fgitFnx0btZyfOsL3r48uxbsppRByjAelAIyQsF_VtKa4ZN-0_d0A\" -F \"file=@/c/Users/moari/Downloads/resume-3-march.pdf\" -F \"name=Resume March 3\")"
+    ]
+  }
+}

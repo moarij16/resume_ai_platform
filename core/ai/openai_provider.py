@@ -1,6 +1,6 @@
 from django.conf import settings
 from openai import OpenAI
-from .base import BaseAIProvider, AIResponse
+from .base_provider import BaseAIProvider, AIResponse
 from typing import Optional
 
 

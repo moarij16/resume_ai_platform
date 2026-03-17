@@ -23,7 +23,7 @@ def setup_logging(
         log_file: Optional path to write logs to a file.
     """
     log_level = logging.DEBUG if verbose else level
-    root = logging.getLogger("ats_scanner")
+    root = logging.getLogger("scanner")
     root.setLevel(log_level)
 
     if root.handlers:
@@ -55,6 +55,6 @@ def get_logger(name: str) -> logging.Logger:
     Returns:
         Logger instance.
     """
-    if name.startswith("ats_scanner"):
+    if name.startswith("scanner"):
         return logging.getLogger(name)
-    return logging.getLogger(f"ats_scanner.{name}")
+    return logging.getLogger(f"scanner.{name}")

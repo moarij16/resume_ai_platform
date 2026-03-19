@@ -1,15 +1,15 @@
-from django.conf import settings
-import google.generativeai as genai
-from .base_provider import BaseAIProvider, AIResponse
 from typing import Optional
+from django.conf import settings
+from google import genai
+from google.genai import types
+from .base_provider import BaseAIProvider, AIResponse
 
 
 class GeminiProvider(BaseAIProvider):
 
     def __init__(self):
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        self.model_name = settings.AI_MODEL or "gemini-1.5-pro"
-        self.model = genai.GenerativeModel(self.model_name)
+        self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
+        self.model_name = settings.AI_MODEL or "gemini-2.0-flash"
 
     def generate(
         self,
@@ -18,23 +18,21 @@ class GeminiProvider(BaseAIProvider):
         temperature: float = 0.7,
         max_tokens: int = 2000,
     ) -> AIResponse:
-        full_prompt = prompt
-        if system_prompt:
-            full_prompt = f"{system_prompt}\n\n{prompt}"
 
-        generation_config = genai.types.GenerationConfig(
+        config = types.GenerateContentConfig(
             temperature=temperature,
             max_output_tokens=max_tokens,
+            system_instruction=system_prompt or "",
         )
 
-        response = self.model.generate_content(
-            full_prompt,
-            generation_config=generation_config,
+        response = self.client.models.generate_content(
+            model=self.model_name,
+            contents=prompt,
+            config=config,
         )
 
-        # Gemini doesn't always return token counts
-        input_tokens = getattr(response.usage_metadata, "prompt_token_count", 0)
-        output_tokens = getattr(response.usage_metadata, "candidates_token_count", 0)
+        input_tokens = response.usage_metadata.prompt_token_count or 0
+        output_tokens = response.usage_metadata.candidates_token_count or 0
 
         return AIResponse(
             content=response.text,

@@ -1,3 +1,4 @@
+import stripe
 from users.models import Users
 import uuid
 
@@ -11,7 +12,7 @@ class SubscriptionStatus(models.TextChoices):
     EXPIRED = "expired", "Expired"
 
 
-class SubscriptionPlans(BaseModel):
+class SubscriptionPlan(BaseModel):
 
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, db_column="plan_id"
@@ -43,7 +44,7 @@ class UserSubscription(BaseModel):
         db_column="user_id",
     )
     plan = models.ForeignKey(
-        "billing.SubscriptionPlans",
+        "billing.SubscriptionPlan",
         on_delete=models.PROTECT,
         related_name="user_subscriptions",
         db_column="plan_id",
@@ -55,6 +56,14 @@ class UserSubscription(BaseModel):
     )
     start_date = models.DateTimeField(null=False, blank=False)
     renewal_date = models.DateTimeField(null=True, blank=True)
+    stripe_subscription_id = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    stripe_customer_id = models.CharField(
+        max_length=255,
+        blank=True,
+    )
 
     class Meta:
         db_table = "user_subscriptions"

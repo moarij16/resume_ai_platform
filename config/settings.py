@@ -102,6 +102,13 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_JWKS_URL = os.getenv("SUPABASE_JWKS_URL")
 SUPABASE_SECRET_KEY = os.getenv("SUPABASE_SECRET_KEY")
 
+# Stripe
+
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+STRIPE_PRO_PRICE_ID = os.getenv("STRIPE_PRO_PRICE_ID", "")
+STRIPE_CAREER_PRICE_ID = os.getenv("STRIPE_CAREER_PRICE_ID", "")
+
 # CORS
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 CORS_ALLOW_CREDENTIALS = True
@@ -124,7 +131,9 @@ SUPABASE_S3_REGION = os.getenv("SUPABASE_S3_REGION", "ap-south-1")
 if SUPABASE_S3_ENDPOINT and SUPABASE_S3_ACCESS_KEY_ID:
     STORAGES = {
         "default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"},
-        "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+        },
     }
     AWS_S3_ENDPOINT_URL = SUPABASE_S3_ENDPOINT
     AWS_ACCESS_KEY_ID = SUPABASE_S3_ACCESS_KEY_ID

@@ -36,9 +36,32 @@ class GeneratedDocumentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="download")
     def download(self, request, pk=None):
         document = self.get_object()
-        fmt = request.query_params.get("format", "txt").lower()
+        # Use "file_format" to avoid collision with DRF's built-in ?format= content-negotiation param
+        fmt = request.query_params.get("file_format", "pdf").lower()
+        stem = f"{document.document_type}_{document.id}"
 
-        if fmt == "txt":
+        if fmt == "pdf":
+            if document.document_type not in _RESUME_TYPES:
+                return Response(
+                    {
+                        "error": "PDF download is only available for resume and resume_refactor documents."
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            payload = render_pdf(document)
+            response = HttpResponse(payload, content_type="application/pdf")
+            response["Content-Disposition"] = f'attachment; filename="{stem}.pdf"'
+            return response
+
+        if fmt == "docx":
+            if document.document_type not in _RESUME_TYPES:
+                return Response(
+                    {
+                        "error": "DOCX download is only available for resume and resume_refactor documents."
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            payload = render_docx(document)
             response = HttpResponse(
                 document.document_content,
                 content_type="text/plain",

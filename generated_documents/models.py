@@ -55,3 +55,25 @@ class GeneratedDocument(BaseModel):
 
     class Meta:
         db_table = "generated_documents"
+
+    def __str__(self):
+        return f"{self.document_type} - {self.user.email}"
+
+    @classmethod
+    def create_for_user(
+        cls,
+        user,
+        document_type: str,
+        document_content: str,
+        resume=None,
+        job=None,
+    ) -> "GeneratedDocument":
+        instance = cls(
+            user=user,
+            document_type=document_type,
+            document_content=document_content,
+            resume=resume,
+            job=job,
+        )
+        instance.save()
+        return instance

@@ -21,3 +21,4 @@ media/
 *.sql
 *.dump
 pyrightconfig.json
+CLAUDE.md

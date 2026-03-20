@@ -3,8 +3,15 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from ats.serializers import ATSScanSerializer
+from ats.services.ats_service import run_scan
+
 from .models import Resume
-from .serializers import ResumeSerializer, ResumeUploadSerializer
+from .serializers import (
+    ResumeSerializer,
+    ResumeUpdateSerializer,
+    ResumeUploadSerializer,
+)
 
 
 class ResumeViewSet(viewsets.ModelViewSet):
@@ -15,6 +22,15 @@ class ResumeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Resume.objects.filter(user=self.request.user)
 
+    def partial_update(self, request, *args, **kwargs):
+        resume = self.get_object()
+        serializer = ResumeUpdateSerializer(
+            resume, data=request.data, partial=True, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        updated_resume = serializer.save()
+        return Response(ResumeSerializer(updated_resume).data)
+
     @action(detail=False, methods=["post"], url_path="upload")
     def upload(self, request):
         serializer = ResumeUploadSerializer(
@@ -22,12 +38,19 @@ class ResumeViewSet(viewsets.ModelViewSet):
         )
         serializer.is_valid(raise_exception=True)
         resume = serializer.save()
-        return Response(ResumeSerializer(resume).data, status=status.HTTP_201_CREATED)
 
-    @action(detail=False, methods=["post"], url_path="generate")
-    def generate(self, request):
-        return Response({"message": "resume generate exists"})
+        try:
+            scan = run_scan(user=request.user, resume_id=resume.id)
+        except Exception as e:
+            return Response(
+                {"error": True, "detail": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-    @action(detail=True, methods=["get"], url_path="download")
-    def download(self, request, pk=None):
-        return Response({"message": f"resume {pk} download exists"})
+        return Response(
+            {
+                "resume": ResumeSerializer(resume).data,
+                "ats_scan": ATSScanSerializer(scan).data,
+            },
+            status=status.HTTP_201_CREATED,
+        )

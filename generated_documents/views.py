@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import GeneratedDocument
+from .models import DocumentType, GeneratedDocument
 from .serializers import (
     CoverLetterInputSerializer,
     GeneratedDocumentSerializer,
@@ -18,6 +18,9 @@ from .services.generator import (
     generate_resume,
     generate_resume_refactor,
 )
+from .services.renderer import render_docx, render_pdf
+
+_RESUME_TYPES = {DocumentType.RESUME, DocumentType.RESUME_REFACTOR}
 
 
 class GeneratedDocumentViewSet(viewsets.ModelViewSet):
@@ -36,20 +39,41 @@ class GeneratedDocumentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="download")
     def download(self, request, pk=None):
         document = self.get_object()
-        fmt = request.query_params.get("format", "txt").lower()
+        fmt = request.query_params.get("format", "pdf").lower()
+        stem = f"{document.document_type}_{document.id}"
 
-        if fmt == "txt":
-            response = HttpResponse(
-                document.document_content,
-                content_type="text/plain",
-            )
-            filename = f"{document.document_type}_{document.id}.txt"
-            response["Content-Disposition"] = f'attachment; filename="{filename}"'
+        if fmt == "pdf":
+            if document.document_type not in _RESUME_TYPES:
+                return Response(
+                    {"error": "PDF download is only available for resume and resume_refactor documents."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            payload = render_pdf(document)
+            response = HttpResponse(payload, content_type="application/pdf")
+            response["Content-Disposition"] = f'attachment; filename="{stem}.pdf"'
             return response
 
-        # TODO: implement pdf / docx once reportlab / python-docx is added
+        if fmt == "docx":
+            if document.document_type not in _RESUME_TYPES:
+                return Response(
+                    {"error": "DOCX download is only available for resume and resume_refactor documents."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            payload = render_docx(document)
+            response = HttpResponse(
+                payload,
+                content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            )
+            response["Content-Disposition"] = f'attachment; filename="{stem}.docx"'
+            return response
+
+        if fmt == "txt":
+            response = HttpResponse(document.document_content, content_type="text/plain")
+            response["Content-Disposition"] = f'attachment; filename="{stem}.txt"'
+            return response
+
         return Response(
-            {"error": f"Format '{fmt}' is not yet supported. Use format=txt."},
+            {"error": f"Unsupported format '{fmt}'. Use: pdf, docx, txt."},
             status=status.HTTP_400_BAD_REQUEST,
         )
 

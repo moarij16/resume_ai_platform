@@ -29,6 +29,18 @@ class ResumeUploadSerializer(serializers.Serializer):
         raise NotImplementedError
 
 
+class ResumeUpdateSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=255, required=False)
+    resume_data = serializers.JSONField(required=False)
+
+    def update(self, instance, validated_data):
+        instance.update_confirmed_data(
+            name=validated_data.get("name"),
+            resume_data=validated_data.get("resume_data"),
+        )
+        return instance
+
+
 class ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resume

@@ -56,3 +56,14 @@ class Resume(BaseModel):
         )
         resume.save()
         return resume
+
+    def update_confirmed_data(self, name: str = None, resume_data: dict = None) -> None:
+        """Update name and/or resume_data after user confirms the parsed output."""
+        update_fields = ["updated_at"]
+        if name is not None:
+            self.name = name
+            update_fields.append("name")
+        if resume_data is not None:
+            self.resume_data = resume_data
+            update_fields.append("resume_data")
+        self.save(update_fields=update_fields)

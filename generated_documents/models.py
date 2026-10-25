@@ -1,5 +1,5 @@
 import uuid
-from core.base import BaseModel
+from core.base import UserOwnedModel
 from django.db import models
 
 from jobs.models import JobDescription
@@ -15,7 +15,7 @@ class DocumentType(models.TextChoices):
 
 
 # Create your models here.
-class GeneratedDocument(BaseModel):
+class GeneratedDocument(UserOwnedModel):
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,

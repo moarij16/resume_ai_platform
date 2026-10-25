@@ -2,6 +2,15 @@
 
 Django REST Framework + Supabase + PostgreSQL
 
+| Doc | What's in it |
+|---|---|
+| [docs/architecture.md](docs/architecture.md) | Apps, request flow, data shapes, AI layer |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commits, PRs, code standards |
+| [AGENTS.md](AGENTS.md) | Rules for AI coding agents (also loaded via `CLAUDE.md`) |
+| [docs/adr/](docs/adr/README.md) | Architecture decision records |
+
+The web client lives in the separate `resume_ai_frontend` repo (Next.js).
+
 ---
 
 ## Setup
@@ -32,37 +41,30 @@ python manage.py runserver
 
 ## Environment Variables
 
-Copy `.env.example` to `.env` and fill in:
-
-```env
-SECRET_KEY=
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=postgres
-DB_USER=postgres
-DB_PASSWORD=
-DB_HOST=db.your-project.supabase.co
-DB_PORT=5432
-
-SUPABASE_URL=
-SUPABASE_JWKS_URL=
-SUPABASE_SECRET_KEY=
-
-OPENAI_API_KEY=
-
-CORS_ALLOWED_ORIGINS=http://localhost:3000
-```
+Copy `.env.example` to `.env` and fill in the values. Keys that are commented
+out are optional — leave them commented rather than blank, since an empty value
+overrides the default.
 
 ---
 
 ## Authentication
 
-All endpoints require:
+Auth is handled locally: Django stores users (email + hashed password) and
+issues JWTs via `djangorestframework-simplejwt`.
+
+| Method | Endpoint | Body |
+|---|---|---|
+| POST | `/api/v1/users/auth/register/` | `email`, `password`, `first_name`, `last_name` |
+| POST | `/api/v1/users/auth/login/` | `email`, `password` |
+| POST | `/api/v1/users/auth/refresh/` | `refresh` |
+| POST | `/api/v1/users/auth/logout/` | `refresh` |
+| POST | `/api/v1/users/me/change-password/` | `current_password`, `new_password` |
+
+Register and login return `access` and `refresh` tokens. All other endpoints require:
 
 ```
-Authorization: Bearer <supabase_access_token>
+Authorization: Bearer <access_token>
 ```
 
-Get a token via Supabase Auth before making requests.
+Access tokens last 15 minutes and refresh tokens 7 days (`JWT_ACCESS_MINUTES`,
+`JWT_REFRESH_DAYS`). Each refresh issues a new refresh token and blacklists the old one.

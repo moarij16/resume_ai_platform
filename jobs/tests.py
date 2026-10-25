@@ -32,7 +32,6 @@ BASE_URL = "/api/v1/jobs/"
 @pytest.fixture
 def user(db):
     return Users.objects.create(
-        supabase_uid=str(uuid.uuid4()),
         email="jobs_user@example.com",
         first_name="Job",
         last_name="Tester",
@@ -42,7 +41,6 @@ def user(db):
 @pytest.fixture
 def other_user(db):
     return Users.objects.create(
-        supabase_uid=str(uuid.uuid4()),
         email="other_jobs@example.com",
     )
 

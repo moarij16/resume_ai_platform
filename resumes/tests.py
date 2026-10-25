@@ -9,7 +9,6 @@ Covers:
 """
 
 import io
-import uuid
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -28,7 +27,6 @@ from users.models import Users
 @pytest.fixture
 def user(db):
     return Users.objects.create(
-        supabase_uid=str(uuid.uuid4()),
         email="test@example.com",
         first_name="Test",
         last_name="User",
@@ -38,7 +36,6 @@ def user(db):
 @pytest.fixture
 def other_user(db):
     return Users.objects.create(
-        supabase_uid=str(uuid.uuid4()),
         email="other@example.com",
     )
 

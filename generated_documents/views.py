@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from core.mixins import OwnedResourceMixin
 
 from .models import DocumentType, GeneratedDocument
 from .serializers import (
@@ -23,13 +24,10 @@ from .services.renderer import render_docx, render_pdf
 _RESUME_TYPES = {DocumentType.RESUME, DocumentType.RESUME_REFACTOR}
 
 
-class GeneratedDocumentViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+class GeneratedDocumentViewSet(OwnedResourceMixin, viewsets.ModelViewSet):
+    owned_model = GeneratedDocument
     http_method_names = ["get", "post", "delete"]
     serializer_class = GeneratedDocumentSerializer
-
-    def get_queryset(self):
-        return GeneratedDocument.objects.filter(user=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

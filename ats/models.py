@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from core.base import BaseModel
+from core.base import UserOwnedModel
 from users.models import Users
 
 
@@ -9,7 +9,7 @@ class ScanMode(models.TextChoices):
     JD_MATCH = "jd_match", "JD Match"
 
 
-class ATSScan(BaseModel):
+class ATSScan(UserOwnedModel):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, db_column="scan_id"
     )

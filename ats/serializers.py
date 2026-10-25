@@ -1,10 +1,16 @@
 from rest_framework import serializers
+
+from core.fields import OwnedResourceIdField
+from jobs.models import JobDescription
+from resumes.models import Resume
 from .models import ATSScan
 
 
 class ATSScanInputSerializer(serializers.Serializer):
-    resume_id = serializers.UUIDField()
-    job_id = serializers.UUIDField(required=False, allow_null=True)
+    resume_id = OwnedResourceIdField(Resume, "Resume not found.")
+    job_id = OwnedResourceIdField(
+        JobDescription, "Job description not found.", required=False, allow_null=True
+    )
 
 
 class ATSScanSerializer(serializers.ModelSerializer):

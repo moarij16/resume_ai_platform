@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -8,17 +9,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = [v.strip() for v in os.getenv("ALLOWED_HOSTS", "").split(",") if v.strip()]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
     "pgvector.django",
     # Third party
     "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     # Project apps
     "users",
@@ -71,11 +74,20 @@ DATABASES = {
 }
 
 
-# Password validation
+# Auth
+
+AUTH_USER_MODEL = "users.Users"
+
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "users.authentication.SupabaseAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -86,24 +98,20 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "config.exceptions.custom_exception_handler",
     "UNAUTHENTICATED_USER": None,
 }
-# AWS Cognito
 
-# AWS_COGNITO_REGION = os.getenv("AWS_COGNITO_REGION")
-# AWS_COGNITO_USER_POOL_ID = os.getenv("AWS_COGNITO_USER_POOL_ID")
-# AWS_COGNITO_APP_CLIENT_ID = os.getenv("AWS_COGNITO_APP_CLIENT_ID")
-# AWS_COGNITO_JWKS_URL = (
-#     f"https://cognito-idp.{AWS_COGNITO_REGION}.amazonaws.com/"
-#     f"{AWS_COGNITO_USER_POOL_ID}/.well-known/jwks.json"
-# )
+# JWT
 
-# Supabase Auth
-
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_JWKS_URL = os.getenv("SUPABASE_JWKS_URL")
-SUPABASE_SECRET_KEY = os.getenv("SUPABASE_SECRET_KEY")
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(os.getenv("JWT_ACCESS_MINUTES", "15"))),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(os.getenv("JWT_REFRESH_DAYS", "7"))),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": False,  # handled by Users.record_login
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
 
 # CORS
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
+CORS_ALLOWED_ORIGINS = [v.strip() for v in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if v.strip()]
 CORS_ALLOW_CREDENTIALS = True
 
 # Internationalization

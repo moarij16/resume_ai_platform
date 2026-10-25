@@ -1,14 +1,37 @@
+import logging
+
 from django.conf import settings
 from .base_provider import BaseAIProvider, AIResponse
+from .exceptions import AIProviderNotConfigured
 from typing import Optional
+
+logger = logging.getLogger(__name__)
+
+# The settings key each provider needs; a missing key fails fast with a clear
+# server-side log instead of a provider 401 surfacing to the user.
+API_KEY_SETTINGS = {
+    "openai": "OPENAI_API_KEY",
+    "anthropic": "ANTHROPIC_API_KEY",
+    "gemini": "GEMINI_API_KEY",
+}
 
 
 def get_provider() -> BaseAIProvider:
     """
     Factory — returns the correct provider based on AI_PROVIDER setting.
     Swap providers by changing AI_PROVIDER in .env — no code changes needed.
+    Raises AIProviderNotConfigured (HTTP 503) when the provider is unknown or
+    its API key is missing.
     """
     provider = settings.AI_PROVIDER.lower()
+
+    key_setting = API_KEY_SETTINGS.get(provider)
+    if key_setting is None:
+        logger.error("Unknown AI_PROVIDER %r. Choose openai, anthropic, or gemini.", provider)
+        raise AIProviderNotConfigured()
+    if not getattr(settings, key_setting, ""):
+        logger.error("AI_PROVIDER=%s but %s is not set.", provider, key_setting)
+        raise AIProviderNotConfigured()
 
     if provider == "openai":
         from .openai_provider import OpenAIProvider
@@ -22,10 +45,6 @@ def get_provider() -> BaseAIProvider:
         from .gemini_provider import GeminiProvider
 
         return GeminiProvider()
-    else:
-        raise ValueError(
-            f"Unknown AI provider: {provider}. Choose openai, anthropic, or gemini."
-        )
 
 
 class AIService:

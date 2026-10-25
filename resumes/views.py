@@ -1,10 +1,10 @@
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from ats.serializers import ATSScanSerializer
 from ats.services.ats_service import run_scan
+from core.mixins import OwnedResourceMixin
 
 from .models import Resume
 from .serializers import (
@@ -14,13 +14,10 @@ from .serializers import (
 )
 
 
-class ResumeViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+class ResumeViewSet(OwnedResourceMixin, viewsets.ModelViewSet):
+    owned_model = Resume
     http_method_names = ["get", "post", "patch", "delete"]
     serializer_class = ResumeSerializer
-
-    def get_queryset(self):
-        return Resume.objects.filter(user=self.request.user)
 
     def partial_update(self, request, *args, **kwargs):
         resume = self.get_object()

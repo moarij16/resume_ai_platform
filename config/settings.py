@@ -146,7 +146,8 @@ if SUPABASE_S3_ENDPOINT and SUPABASE_S3_ACCESS_KEY_ID:
 
 
 AI_PROVIDER = os.getenv("AI_PROVIDER", "openai")
-AI_MODEL = os.getenv("AI_MODEL", "gpt-4o")
+# Empty means "use the selected provider's default model" (see core/ai/*_provider.py).
+AI_MODEL = os.getenv("AI_MODEL", "")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")

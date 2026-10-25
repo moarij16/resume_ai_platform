@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, master]
+  push:
+    branches: [dev, master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      # PostgreSQL with pgvector: jobs.JobDescription uses a VectorField.
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: careerlift
+          POSTGRES_PASSWORD: careerlift
+          POSTGRES_DB: careerlift
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U careerlift"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      SECRET_KEY: ci-only-not-secret
+      DEBUG: "False"
+      ALLOWED_HOSTS: localhost
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: careerlift
+      DB_USER: careerlift
+      DB_PASSWORD: careerlift
+      DB_HOST: localhost
+      DB_PORT: "5432"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # mysqlclient (in requirements.txt) needs the MySQL client headers to build.
+      - name: System packages
+        run: sudo apt-get update && sudo apt-get install -y pkg-config default-libmysqlclient-dev
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-django
+
+      - name: Django system check
+        run: python manage.py check
+
+      - name: Check for missing migrations
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Tests
+        run: pytest

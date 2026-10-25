@@ -1,22 +1,20 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from core.mixins import OwnedResourceMixin
 from .models import ATSScan
 from .serializers import ATSScanInputSerializer, ATSScanSerializer
 from .services.ats_service import run_scan
 
 
-class ATSViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [IsAuthenticated]
+class ATSViewSet(OwnedResourceMixin, viewsets.ReadOnlyModelViewSet):
+    owned_model = ATSScan
     serializer_class = ATSScanSerializer
-
-    def get_queryset(self):
-        return ATSScan.objects.filter(user=self.request.user)
 
     @action(detail=False, methods=["post"], url_path="scan")
     def scan(self, request):
-        serializer = ATSScanInputSerializer(data=request.data)
+        serializer = ATSScanInputSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
         resume_id = serializer.validated_data["resume_id"]

@@ -1,6 +1,7 @@
 from rest_framework import status, viewsets
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from core.mixins import OwnedResourceMixin
 
 from .models import JobDescription
 from .serializers import (
@@ -10,13 +11,10 @@ from .serializers import (
 )
 
 
-class JobDescriptionViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+class JobDescriptionViewSet(OwnedResourceMixin, viewsets.ModelViewSet):
+    owned_model = JobDescription
     http_method_names = ["get", "post", "patch", "delete"]
     serializer_class = JobDescriptionSerializer
-
-    def get_queryset(self):
-        return JobDescription.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         serializer = JobDescriptionCreateSerializer(

@@ -1,8 +1,17 @@
 import json
+import logging
 
 from core.ai.service import AIService
 from core.ai.parser import AIResponseParser
-from core.ai.exceptions import AIGenerationFailed
+from core.ai.exceptions import AIGenerationFailed, AIRateLimited
+
+logger = logging.getLogger(__name__)
+
+
+def _is_rate_limit(error: Exception) -> bool:
+    """OpenAI/Anthropic errors carry `status_code`; Google GenAI errors carry `code`."""
+    status = getattr(error, "status_code", None) or getattr(error, "code", None)
+    return status == 429
 
 
 def call_ai(
@@ -19,8 +28,12 @@ def call_ai(
     If response_key is given, extracts that key from the parsed JSON.
     If response_key is None, returns the full parsed JSON as a string
     so no fields are silently dropped.
+
+    Provider failures become friendly 503s (AIProviderNotConfigured,
+    AIRateLimited, AIGenerationFailed); the provider's own error text is only
+    logged, never returned to the client.
     """
-    ai = AIService()
+    ai = AIService()  # raises AIProviderNotConfigured if the provider isn't set up
 
     try:
         response = ai.generate(
@@ -30,7 +43,10 @@ def call_ai(
             max_tokens=max_tokens,
         )
     except Exception as e:
-        raise AIGenerationFailed(detail=str(e))
+        logger.exception("AI generation failed (model=%s)", ai.model_name)
+        if _is_rate_limit(e):
+            raise AIRateLimited() from e
+        raise AIGenerationFailed() from e
 
     parser = AIResponseParser()
     try:

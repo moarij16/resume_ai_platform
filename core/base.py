@@ -43,3 +43,30 @@ class BaseModel(models.Model):
     @property
     def is_active(self):
         return not self.is_deleted
+
+
+class UserOwnedModel(BaseModel):
+    """
+    Base for records that belong to one user (resumes, jobs, scans, documents).
+    Subclasses must define a `user` ForeignKey.
+
+    The default manager hides soft-deleted rows; use `all_objects` when deleted
+    rows are explicitly needed. (Not on BaseModel itself: the Users model would
+    inherit these managers and Django's auth backend relies on its own manager.)
+    """
+
+    objects = SoftDeleteManager()
+    all_objects = AllObjectsManager()
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def owned_by(cls, user):
+        """Records belonging to `user`, excluding soft-deleted ones."""
+        if not getattr(user, "is_authenticated", False):
+            return cls.objects.none()
+        return cls.objects.filter(user=user)
+
+    def is_owned_by(self, user) -> bool:
+        return getattr(user, "is_authenticated", False) and self.user_id == user.pk

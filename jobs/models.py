@@ -1,11 +1,11 @@
-from core.base import BaseModel
+from core.base import UserOwnedModel
 import uuid
 from users.models import Users
 from django.db import models
 from pgvector.django import VectorField
 
 
-class JobDescription(BaseModel):
+class JobDescription(UserOwnedModel):
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,

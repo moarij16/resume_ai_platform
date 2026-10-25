@@ -1,6 +1,6 @@
 from jobs.models import JobDescription
 from importlib.metadata import version
-from core.base import BaseModel
+from core.base import UserOwnedModel
 import uuid
 
 from django.db import models
@@ -8,7 +8,7 @@ from django.db import models
 from users.models import Users
 
 
-class Resume(BaseModel):
+class Resume(UserOwnedModel):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, db_column="resume_id"
     )

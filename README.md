@@ -2,6 +2,15 @@
 
 Django REST Framework + Supabase + PostgreSQL
 
+| Doc | What's in it |
+|---|---|
+| [docs/architecture.md](docs/architecture.md) | Apps, request flow, data shapes, AI layer |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commits, PRs, code standards |
+| [AGENTS.md](AGENTS.md) | Rules for AI coding agents (also loaded via `CLAUDE.md`) |
+| [docs/adr/](docs/adr/README.md) | Architecture decision records |
+
+The web client lives in the separate `resume_ai_frontend` repo (Next.js).
+
 ---
 
 ## Setup

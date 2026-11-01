@@ -23,3 +23,6 @@ media/
 *.dump
 pyrightconfig.json
 CLAUDE.md
+
+# Production environment values (secrets) — set these in the Vercel dashboard, never commit
+prod.env

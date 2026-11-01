@@ -95,8 +95,6 @@ Check these before you rely on the behaviour, and fix them deliberately in their
 - `POST /api/v1/resumes/` (router create) has no writable fields and errors. Use `/upload/`.
 - `users/permissions.py` refers to `is_admin`, `is_premium` and `is_within_limits`, which the user
   model doesn't have.
-- `resumes/tests.py::test_upload_response_shape` is stale: it expects the pre-`0ff1836` upload
-  response (top-level `id`), but the endpoint returns `{resume, ats_scan}`.
 - The ATS scan and resume upload views still catch broad exceptions and return `str(e)` as a 400.
 - Media files aren't served in local development (`original_file_url` is a relative path).
 - The codebase isn't fully `black`-formatted yet. Format only the files you touch.

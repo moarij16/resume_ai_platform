@@ -209,11 +209,20 @@ class TestResumeUploadView:
                 format="multipart",
             )
         data = response.json()
-        assert "id" in data
-        assert "name" in data
-        assert "resume_data" in data
-        assert "original_file_url" in data
-        assert "created_at" in data
+        # Upload creates the resume and runs a resume-only ATS scan on it.
+        assert set(data) == {"resume", "ats_scan"}
+
+        resume = data["resume"]
+        for key in ("id", "name", "resume_data", "original_file_url", "created_at"):
+            assert key in resume
+        assert resume["name"] == "My CV"
+
+        scan = data["ats_scan"]
+        for key in ("id", "scan_mode", "ats_score", "breakdown", "suggestions", "resume", "job"):
+            assert key in scan
+        assert scan["resume"] == resume["id"]
+        assert scan["scan_mode"] == "resume_only"
+        assert scan["job"] is None
 
     def test_upload_rejects_wrong_extension(self, auth_client):
         txt = SimpleUploadedFile("cv.txt", b"text", content_type="text/plain")

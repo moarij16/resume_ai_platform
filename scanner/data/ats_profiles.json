@@ -1,0 +1,30 @@
+{
+  "workday": {
+    "name": "Workday",
+    "hates": ["tables", "text_boxes", "multi_column", "headers_footers", "images"],
+    "loves": ["plain_text", "simple_bullets", "standard_headings", "chronological_order"],
+    "parsing_accuracy": 0.85,
+    "notes": "Prefer single column, avoid graphics."
+  },
+  "greenhouse": {
+    "name": "Greenhouse",
+    "hates": ["complex_tables", "text_boxes", "non_standard_sections"],
+    "loves": ["plain_text", "clear_section_headers", "bullet_points"],
+    "parsing_accuracy": 0.88,
+    "notes": "Good with standard resume formats."
+  },
+  "lever": {
+    "name": "Lever",
+    "hates": ["tables", "images", "headers_footers"],
+    "loves": ["plain_text", "simple_formatting", "keywords"],
+    "parsing_accuracy": 0.82,
+    "notes": "Keyword-heavy parsing."
+  },
+  "generic": {
+    "name": "Generic ATS",
+    "hates": ["tables", "text_boxes", "images", "columns", "special_characters"],
+    "loves": ["plain_text", "standard_sections", "bullet_points", "clear_headings"],
+    "parsing_accuracy": 0.80,
+    "notes": "Default profile when ATS type unknown."
+  }
+}

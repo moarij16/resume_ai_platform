@@ -1,0 +1,10 @@
+venv/
+.venv/
+media/
+.env
+.env.*
+!.env.example
+db.sqlite3
+**/__pycache__/
+.vscode/
+prod.env

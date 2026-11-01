@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, master]
+  push:
+    branches: [dev, master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      # PostgreSQL with pgvector: jobs.JobDescription uses a VectorField.
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: careerlift
+          POSTGRES_PASSWORD: careerlift
+          POSTGRES_DB: careerlift
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U careerlift"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      SECRET_KEY: ci-only-not-secret
+      DEBUG: "False"
+      ALLOWED_HOSTS: localhost
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: careerlift
+      DB_USER: careerlift
+      DB_PASSWORD: careerlift
+      DB_HOST: localhost
+      DB_PORT: "5432"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version # same version Vercel deploys with
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Django system check
+        run: python manage.py check
+
+      - name: Check for missing migrations
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Tests
+        run: pytest

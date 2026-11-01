@@ -1,0 +1,13 @@
+{
+  "role": "Software Engineer",
+  "min_keyword_match_pct": 65,
+  "avg_keyword_match_pct": 78,
+  "typical_skills_count": 15,
+  "critical_skills": ["Programming language", "Version control", "Testing", "API/Backend or Frontend"],
+  "section_weights": {
+    "experience": 1.0,
+    "projects": 0.9,
+    "skills": 0.6,
+    "education": 0.5
+  }
+}

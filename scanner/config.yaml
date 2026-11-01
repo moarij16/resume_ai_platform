@@ -1,0 +1,24 @@
+# Optional config overlay. Defaults in config.py apply if keys missing.
+
+models:
+  spacy: "en_core_web_md"
+  sentence_transformer: "all-MiniLM-L6-v2"
+
+scoring:
+  skill_weight: 0.40
+  keyword_weight: 0.25
+  semantic_weight: 0.25
+  experience_weight: 0.10
+
+# Section weights for scoring (not extraction)
+section_weights_scoring:
+  experience: 1.0
+  projects: 0.9
+  skills: 0.6
+  education: 0.5
+
+thresholds:
+  min_ats_score: 70
+  critical_skill_match: 0.80
+  optimal_keyword_density_pct: 2.5
+  keyword_density_max_pct: 5.0

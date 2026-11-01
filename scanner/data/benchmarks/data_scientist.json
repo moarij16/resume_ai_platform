@@ -1,0 +1,13 @@
+{
+  "role": "Data Scientist",
+  "min_keyword_match_pct": 68,
+  "avg_keyword_match_pct": 82,
+  "typical_skills_count": 18,
+  "critical_skills": ["Python or R", "SQL", "Machine Learning", "Statistics", "Data visualization"],
+  "section_weights": {
+    "experience": 1.0,
+    "projects": 0.95,
+    "skills": 0.65,
+    "education": 0.6
+  }
+}

@@ -1,0 +1,434 @@
+{
+  "programming_languages": {
+    "python": {
+      "canonical": "Python",
+      "variations": ["python", "py", "python3", "python 3"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "javascript": {
+      "canonical": "JavaScript",
+      "variations": ["javascript", "js", "ecmascript", "es6", "es2015"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "typescript": {
+      "canonical": "TypeScript",
+      "variations": ["typescript", "ts"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "java": {
+      "canonical": "Java",
+      "variations": ["java", "jdk", "jvm"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "csharp": {
+      "canonical": "C#",
+      "variations": ["c#", "csharp", "c sharp"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "go": {
+      "canonical": "Go",
+      "variations": ["go", "golang"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "rust": {
+      "canonical": "Rust",
+      "variations": ["rust"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "kotlin": {
+      "canonical": "Kotlin",
+      "variations": ["kotlin"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "swift": {
+      "canonical": "Swift",
+      "variations": ["swift"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "ruby": {
+      "canonical": "Ruby",
+      "variations": ["ruby", "rails"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "php": {
+      "canonical": "PHP",
+      "variations": ["php"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "r": {
+      "canonical": "R",
+      "variations": ["r", "r language", "r programming"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "scala": {
+      "canonical": "Scala",
+      "variations": ["scala"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "sql": {
+      "canonical": "SQL",
+      "variations": ["sql", "mysql", "postgresql", "postgres", "tsql"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "cplusplus": {
+      "canonical": "C++",
+      "variations": ["c++", "cpp", "c plus plus"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "c": {
+      "canonical": "C",
+      "variations": ["c language", "c programming"],
+      "category": "Programming Language",
+      "weight": 1.0
+    },
+    "bash": {
+      "canonical": "Bash",
+      "variations": ["bash", "shell", "sh", "zsh"],
+      "category": "Programming Language",
+      "weight": 0.9
+    },
+    "powershell": {
+      "canonical": "PowerShell",
+      "variations": ["powershell", "pwsh"],
+      "category": "Programming Language",
+      "weight": 0.9
+    }
+  },
+  "frameworks": {
+    "react": {
+      "canonical": "React",
+      "variations": ["react", "reactjs", "react.js", "react-js"],
+      "category": "Frontend Framework",
+      "weight": 0.95
+    },
+    "angular": {
+      "canonical": "Angular",
+      "variations": ["angular", "angularjs", "angular.js"],
+      "category": "Frontend Framework",
+      "weight": 0.95
+    },
+    "vue": {
+      "canonical": "Vue.js",
+      "variations": ["vue", "vuejs", "vue.js"],
+      "category": "Frontend Framework",
+      "weight": 0.95
+    },
+    "django": {
+      "canonical": "Django",
+      "variations": ["django"],
+      "category": "Backend Framework",
+      "weight": 0.95
+    },
+    "flask": {
+      "canonical": "Flask",
+      "variations": ["flask"],
+      "category": "Backend Framework",
+      "weight": 0.95
+    },
+    "fastapi": {
+      "canonical": "FastAPI",
+      "variations": ["fastapi", "fast api"],
+      "category": "Backend Framework",
+      "weight": 0.95
+    },
+    "spring": {
+      "canonical": "Spring",
+      "variations": ["spring", "spring boot", "spring framework"],
+      "category": "Backend Framework",
+      "weight": 0.95
+    },
+    "node": {
+      "canonical": "Node.js",
+      "variations": ["node", "nodejs", "node.js"],
+      "category": "Backend Framework",
+      "weight": 0.95
+    },
+    "express": {
+      "canonical": "Express",
+      "variations": ["express", "expressjs", "express.js"],
+      "category": "Backend Framework",
+      "weight": 0.9
+    },
+    "nextjs": {
+      "canonical": "Next.js",
+      "variations": ["nextjs", "next.js", "next js"],
+      "category": "Frontend Framework",
+      "weight": 0.95
+    },
+    "dotnet": {
+      "canonical": ".NET",
+      "variations": [".net", "dotnet", "asp.net", "aspnet"],
+      "category": "Backend Framework",
+      "weight": 0.95
+    },
+    "rails": {
+      "canonical": "Ruby on Rails",
+      "variations": ["rails", "ruby on rails", "ror"],
+      "category": "Backend Framework",
+      "weight": 0.95
+    },
+    "laravel": {
+      "canonical": "Laravel",
+      "variations": ["laravel"],
+      "category": "Backend Framework",
+      "weight": 0.95
+    },
+    "tensorflow": {
+      "canonical": "TensorFlow",
+      "variations": ["tensorflow", "tensor flow"],
+      "category": "ML Framework",
+      "weight": 0.95
+    },
+    "pytorch": {
+      "canonical": "PyTorch",
+      "variations": ["pytorch", "py torch"],
+      "category": "ML Framework",
+      "weight": 0.95
+    },
+    "scikit": {
+      "canonical": "scikit-learn",
+      "variations": ["scikit-learn", "scikit learn", "sklearn"],
+      "category": "ML Framework",
+      "weight": 0.95
+    }
+  },
+  "databases": {
+    "postgresql": {
+      "canonical": "PostgreSQL",
+      "variations": ["postgresql", "postgres", "psql"],
+      "category": "Database",
+      "weight": 1.0
+    },
+    "mysql": {
+      "canonical": "MySQL",
+      "variations": ["mysql", "my sql"],
+      "category": "Database",
+      "weight": 1.0
+    },
+    "mongodb": {
+      "canonical": "MongoDB",
+      "variations": ["mongodb", "mongo"],
+      "category": "Database",
+      "weight": 1.0
+    },
+    "redis": {
+      "canonical": "Redis",
+      "variations": ["redis"],
+      "category": "Database",
+      "weight": 1.0
+    },
+    "elasticsearch": {
+      "canonical": "Elasticsearch",
+      "variations": ["elasticsearch", "elastic search", "elk"],
+      "category": "Database",
+      "weight": 0.95
+    },
+    "dynamodb": {
+      "canonical": "DynamoDB",
+      "variations": ["dynamodb", "dynamo db"],
+      "category": "Database",
+      "weight": 0.95
+    },
+    "sqlite": {
+      "canonical": "SQLite",
+      "variations": ["sqlite", "sql ite"],
+      "category": "Database",
+      "weight": 0.9
+    },
+    "cassandra": {
+      "canonical": "Cassandra",
+      "variations": ["cassandra", "apache cassandra"],
+      "category": "Database",
+      "weight": 0.9
+    },
+    "kafka": {
+      "canonical": "Kafka",
+      "variations": ["kafka", "apache kafka"],
+      "category": "Message Queue",
+      "weight": 0.95
+    }
+  },
+  "cloud_devops": {
+    "aws": {
+      "canonical": "AWS",
+      "variations": ["aws", "amazon web services", "amazon aws"],
+      "category": "Cloud Platform",
+      "weight": 1.0
+    },
+    "azure": {
+      "canonical": "Azure",
+      "variations": ["azure", "microsoft azure"],
+      "category": "Cloud Platform",
+      "weight": 1.0
+    },
+    "gcp": {
+      "canonical": "GCP",
+      "variations": ["gcp", "google cloud", "google cloud platform"],
+      "category": "Cloud Platform",
+      "weight": 1.0
+    },
+    "docker": {
+      "canonical": "Docker",
+      "variations": ["docker", "containers", "containerization"],
+      "category": "DevOps",
+      "weight": 1.0
+    },
+    "kubernetes": {
+      "canonical": "Kubernetes",
+      "variations": ["kubernetes", "k8s", "kube"],
+      "category": "DevOps",
+      "weight": 1.0
+    },
+    "terraform": {
+      "canonical": "Terraform",
+      "variations": ["terraform", "iac", "infrastructure as code"],
+      "category": "DevOps",
+      "weight": 0.95
+    },
+    "jenkins": {
+      "canonical": "Jenkins",
+      "variations": ["jenkins", "ci/cd", "cicd", "ci cd"],
+      "category": "DevOps",
+      "weight": 0.95
+    },
+    "github_actions": {
+      "canonical": "GitHub Actions",
+      "variations": ["github actions", "github actions", "gh actions"],
+      "category": "DevOps",
+      "weight": 0.9
+    },
+    "gitlab_ci": {
+      "canonical": "GitLab CI",
+      "variations": ["gitlab ci", "gitlab cicd"],
+      "category": "DevOps",
+      "weight": 0.9
+    },
+    "ansible": {
+      "canonical": "Ansible",
+      "variations": ["ansible"],
+      "category": "DevOps",
+      "weight": 0.9
+    },
+    "linux": {
+      "canonical": "Linux",
+      "variations": ["linux", "ubuntu", "centos", "debian"],
+      "category": "DevOps",
+      "weight": 0.95
+    }
+  },
+  "tools": {
+    "git": {
+      "canonical": "Git",
+      "variations": ["git", "github", "gitlab", "version control"],
+      "category": "Tools",
+      "weight": 1.0
+    },
+    "rest": {
+      "canonical": "REST APIs",
+      "variations": ["rest", "rest api", "restful", "restful api"],
+      "category": "Tools",
+      "weight": 0.95
+    },
+    "graphql": {
+      "canonical": "GraphQL",
+      "variations": ["graphql", "graph ql"],
+      "category": "Tools",
+      "weight": 0.95
+    },
+    "jira": {
+      "canonical": "Jira",
+      "variations": ["jira", "atlassian jira"],
+      "category": "Tools",
+      "weight": 0.85
+    },
+    "agile": {
+      "canonical": "Agile",
+      "variations": ["agile", "scrum", "sprint", "kanban"],
+      "category": "Methodology",
+      "weight": 0.9
+    },
+    "figma": {
+      "canonical": "Figma",
+      "variations": ["figma"],
+      "category": "Design",
+      "weight": 0.9
+    },
+    "machine_learning": {
+      "canonical": "Machine Learning",
+      "variations": ["machine learning", "ml", "deep learning", "neural networks"],
+      "category": "ML/AI",
+      "weight": 1.0
+    },
+    "data_analysis": {
+      "canonical": "Data Analysis",
+      "variations": ["data analysis", "data analytics", "analytics"],
+      "category": "Data",
+      "weight": 0.95
+    },
+    "pandas": {
+      "canonical": "Pandas",
+      "variations": ["pandas"],
+      "category": "Data",
+      "weight": 0.95
+    },
+    "numpy": {
+      "canonical": "NumPy",
+      "variations": ["numpy", "numerical python"],
+      "category": "Data",
+      "weight": 0.9
+    }
+  },
+  "soft_skills": {
+    "communication": {
+      "canonical": "Communication",
+      "variations": ["communication", "communicate", "written communication", "verbal communication"],
+      "category": "Soft Skill",
+      "weight": 0.8
+    },
+    "leadership": {
+      "canonical": "Leadership",
+      "variations": ["leadership", "lead", "leading teams"],
+      "category": "Soft Skill",
+      "weight": 0.8
+    },
+    "problem_solving": {
+      "canonical": "Problem Solving",
+      "variations": ["problem solving", "problem-solving", "troubleshooting"],
+      "category": "Soft Skill",
+      "weight": 0.8
+    },
+    "teamwork": {
+      "canonical": "Teamwork",
+      "variations": ["teamwork", "team player", "collaboration", "collaborative"],
+      "category": "Soft Skill",
+      "weight": 0.8
+    },
+    "project_management": {
+      "canonical": "Project Management",
+      "variations": ["project management", "pm", "project manager"],
+      "category": "Soft Skill",
+      "weight": 0.85
+    },
+    "time_management": {
+      "canonical": "Time Management",
+      "variations": ["time management", "prioritization", "deadline"],
+      "category": "Soft Skill",
+      "weight": 0.75
+    }
+  }
+}

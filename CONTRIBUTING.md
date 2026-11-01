@@ -2,9 +2,9 @@
 
 ## Setup
 
-See [README.md](README.md). In short: Python 3.11, a virtualenv, `pip install -r requirements.txt`,
-copy `.env.example` to `.env`, then run `python manage.py migrate`. For tests, also run
-`pip install pytest pytest-django`.
+See [README.md](README.md). In short: Python 3.12 (`.python-version`, the version production uses),
+a virtualenv, `pip install -r requirements-dev.txt`, copy `.env.example` to `.env`, then run
+`python manage.py migrate`. Deployment is described in [docs/deploy.md](docs/deploy.md).
 
 ## Branches
 

@@ -5,6 +5,7 @@ Django REST Framework + Supabase + PostgreSQL
 | Doc | What's in it |
 |---|---|
 | [docs/architecture.md](docs/architecture.md) | Apps, request flow, data shapes, AI layer |
+| [docs/deploy.md](docs/deploy.md) | Free deployment on Vercel + Neon/Supabase |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, commits, PRs, code standards |
 | [AGENTS.md](AGENTS.md) | Rules for AI coding agents (also loaded via `CLAUDE.md`) |
 | [docs/adr/](docs/adr/README.md) | Architecture decision records |
@@ -26,7 +27,7 @@ venv\Scripts\activate        # Windows
 source venv/bin/activate     # Mac/Linux
 
 # 3. Install dependencies
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt   # runtime deps + pytest/black
 
 # 4. Create .env file (see .env.example)
 

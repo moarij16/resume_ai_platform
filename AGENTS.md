@@ -16,8 +16,14 @@ Run everything from the repo root with the virtualenv active (`venv\Scripts\acti
 | Dev server (:8000)   | `python manage.py runserver` (or `start.bat`)          |
 | Migrations           | `python manage.py makemigrations` / `migrate`          |
 | System check         | `python manage.py check`                               |
-| Tests                | `pytest` (needs `pytest` + `pytest-django` installed)  |
+| Install (dev)        | `pip install -r requirements-dev.txt`                  |
+| Tests                | `pytest`                                               |
 | Format               | `black <changed files>`                                |
+
+`requirements.txt` holds **runtime dependencies only**; it is what Vercel installs, under a 500 MB
+bundle limit. Put test and dev tools in `requirements-dev.txt`. Don't add heavy optional scanner
+packages (`sentence-transformers`/PyTorch, `spacy`); the scanner falls back without them. Production
+runs Python 3.12 (`.python-version`); see [docs/deploy.md](docs/deploy.md).
 
 Tests run against PostgreSQL with the `vector` extension. `conftest.py` creates the extension on
 the test database before migrations, so the configured DB user needs permission to do that.

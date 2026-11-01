@@ -1,15 +1,32 @@
 import os
+import urllib.parse
 from datetime import timedelta
 from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Vercel sets VERCEL=1 in builds and functions.
+ON_VERCEL = bool(os.getenv("VERCEL"))
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
+if not SECRET_KEY and not DEBUG:
+    raise ImproperlyConfigured("SECRET_KEY must be set when DEBUG is off.")
+
 ALLOWED_HOSTS = [v.strip() for v in os.getenv("ALLOWED_HOSTS", "").split(",") if v.strip()]
+# Vercel's system env vars hold this deployment's hostnames (no scheme).
+for _var in ("VERCEL_URL", "VERCEL_BRANCH_URL", "VERCEL_PROJECT_PRODUCTION_URL"):
+    if os.getenv(_var):
+        ALLOWED_HOSTS.append(os.environ[_var])
+
+if not DEBUG:
+    # Vercel terminates TLS and forwards the original scheme in this header.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition
@@ -62,16 +79,42 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.getenv("DB_NAME", BASE_DIR / "db.sqlite3"),
-        "USER": os.getenv("DB_USER", ""),
-        "PASSWORD": os.getenv("DB_PASSWORD", ""),
-        "HOST": os.getenv("DB_HOST", ""),
-        "PORT": os.getenv("DB_PORT", ""),
+def _database_from_url(url: str) -> dict:
+    """Parse a postgres:// URL (as set by Vercel's Neon/Supabase integrations)."""
+    parsed = urllib.parse.urlparse(url)
+    options = dict(urllib.parse.parse_qsl(parsed.query))
+    return {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": parsed.path.lstrip("/"),
+        "USER": urllib.parse.unquote(parsed.username or ""),
+        "PASSWORD": urllib.parse.unquote(parsed.password or ""),
+        "HOST": parsed.hostname or "",
+        "PORT": parsed.port or "",
+        "OPTIONS": options,  # e.g. sslmode=require
     }
-}
+
+
+if os.getenv("DATABASE_URL"):
+    DATABASES = {"default": _database_from_url(os.environ["DATABASE_URL"])}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
+            "NAME": os.getenv("DB_NAME", BASE_DIR / "db.sqlite3"),
+            "USER": os.getenv("DB_USER", ""),
+            "PASSWORD": os.getenv("DB_PASSWORD", ""),
+            "HOST": os.getenv("DB_HOST", ""),
+            "PORT": os.getenv("DB_PORT", ""),
+        }
+    }
+    if os.getenv("DB_SSLMODE"):
+        DATABASES["default"]["OPTIONS"] = {"sslmode": os.environ["DB_SSLMODE"]}
+
+# Serverless functions each open their own connection, so production should
+# point at a transaction-mode pooler (Neon "-pooler" host, Supabase port 6543).
+# Server-side cursors don't survive transaction pooling.
+if os.getenv("DB_POOLED", "False") == "True":
+    DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
 
 
 # Auth
@@ -120,7 +163,7 @@ CORS_ALLOW_CREDENTIALS = True
 # File uploads
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
-MAX_UPLOAD_SIZE = 5 * 1024 * 1024  # 5MB
+MAX_UPLOAD_SIZE = 4 * 1024 * 1024  # 4MB: Vercel functions reject request bodies over 4.5MB
 
 # Supabase S3 Storage
 SUPABASE_S3_ENDPOINT = os.getenv("SUPABASE_S3_ENDPOINT")
@@ -143,6 +186,9 @@ if SUPABASE_S3_ENDPOINT and SUPABASE_S3_ACCESS_KEY_ID:
     AWS_S3_FILE_OVERWRITE = False
     AWS_QUERYSTRING_AUTH = True  # signed URLs for private bucket
     AWS_S3_SIGNATURE_VERSION = "s3v4"
+elif ON_VERCEL:
+    # Vercel's filesystem is read-only, so uploads can't fall back to media/.
+    raise ImproperlyConfigured("Set the SUPABASE_S3_* variables: uploads need object storage on Vercel.")
 
 
 AI_PROVIDER = os.getenv("AI_PROVIDER", "openai")
@@ -165,6 +211,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+
+# Logs go to stdout/stderr, which is what Vercel (and runserver) capture.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": os.getenv("LOG_LEVEL", "WARNING")},
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

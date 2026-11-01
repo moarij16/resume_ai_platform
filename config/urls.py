@@ -1,6 +1,9 @@
 from django.urls import path, include
 
+from core.views import health
+
 urlpatterns = [
+    path("health/", health),
     path("api/v1/users/", include("users.urls")),
     path("api/v1/resumes/", include("resumes.urls")),
     path("api/v1/jobs/", include("jobs.urls")),
